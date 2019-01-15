@@ -45,6 +45,14 @@ Données
 =============
 (justification du choix des données et leur description)
 
+<!-- \begin{figure}[h!] -->
+<!--     \centering\includegraphics[width=\columnwidth]{simuldata.png} -->
+<!--     \caption{Dendrogramme des personnages} -->
+<!--     \label{BOVW} -->
+<!-- \end{figure} -->
+
+![4 datasets](img/simuldata.png)
+\ 
 ## Expériences numériques sur les données artificiels (détail de votre étude afin de rendre votre travail
 
 Comparaison des méthodes

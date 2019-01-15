@@ -312,6 +312,16 @@
 %% BEGIN MY ADDITIONS %%
 
 
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
 
 \usepackage[unicode=true]{hyperref}
 
@@ -473,9 +483,9 @@ Subsubsection text here.
 
 (justification du choix des données et leur description)
 
-\subsection{Expériences numériques sur les données artificiels (détail
-de votre étude afin de rendre votre
-travail}\label{experiences-numeriques-sur-les-donnees-artificiels-detail-de-votre-etude-afin-de-rendre-votre-travail}
+\includegraphics{img/simuldata.png} ~ \#\# Expériences numériques sur
+les données artificiels (détail de votre étude afin de rendre votre
+travail
 
 \section{Comparaison des méthodes}\label{comparaison-des-methodes}
 
@@ -506,8 +516,7 @@ Here are two sample references: Laurens van der Maaten (2009).
 \hypertarget{refs}{}
 \hypertarget{ref-JaapHerik}{}
 Laurens van der Maaten, Jaap van den Herik, Eric Postma. 2009.
-``Dimensionality Reduction: A Comparative Review,'' October. Tilburg
-University.
+``Dimensionality Reduction: A Comparative Review.'' Tilburg University.
 
 \end{document}
 
