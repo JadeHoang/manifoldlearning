@@ -188,3 +188,16 @@ PlotSwissRoll(SwissRollMDS)
 plot(SwissRollMDS)
 ```
 
+
+Estimation 
+
+Kernel-based Correlation Dimension
+```{r}
+#install.packages("ider")
+library(ider)
+print(d_swissroll <- convU(swissroll))
+print(d_broken_swiss <- convU(broken_swiss))
+print(d_helix <- convU(helix))
+print(d_twinpeaks <- convU(twinpeaks))
+
+```
