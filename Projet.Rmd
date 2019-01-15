@@ -1,0 +1,190 @@
+---
+title: "Projet Manifold Learning"
+author: "HOANG Bich Ngoc, LA Zangda, LEE Chihoon"
+date: "14/1/2019"
+output: html_document
+---
+```{r}
+rm(list =ls())
+
+```
+
+# 1. Simulation
+
+2 random numbers: $p_{i}$ et $q_{i}$ sampled from uniform distribution with support [0,1]
+
+## Swissroll
+- $x_{i}$: data point
+- $x_{i} = [t_{i}\cos(t_{i}),t_{i}\sin(t_{i}),30q_{i}]$ where $t_{i}=\frac{3\pi}{2}(1+2p_{i})$
+
+```{r}
+# install.packages("rgl")
+library(rgl)
+library(knitr)
+knit_hooks$set(webgl = hook_webgl)
+```
+
+```{r swissroll, webgl=TRUE}
+#### Swiss roll ####
+n <- 1000 # Random position on the parameteric domain.
+u <- matrix(runif(2 * n), ncol = 2)
+
+p <- u[,1]
+q <- u[,2]
+
+t <- 3 * pi / 2 * (1 + 2 * p)
+t_swissroll <- t
+# x <- t * cos(t)
+# y <- 30 * q
+# z <- t * sin(t)
+
+#Jairo's codes
+x <- -cos(t) * t
+y <- 20 * q
+z <- sin(t) * t
+
+swissroll <- cbind(x, y , z)
+# plot3d(swissroll[order(t), ], col = rainbow(n), size = 10)
+```
+
+
+## Helix
+$x_{i}=[(2+\cos(8p_{i}))\cos(p_{i}),(2+\cos(8p_{i}))\sin(p_{i}),\sin(8p_{i})]$
+
+```{r echo = F }
+# #### Helix ####
+# x <- (2 + cos(8 * p)) * cos(p)
+# y <- sin(8 * p)
+# z <- (2 + cos(8 * p)) * sin(p)
+# 
+# helix <- cbind(x, y, z)
+# plot3d(helix[order(t), ], col = rainbow(n), size = 10)
+
+```
+
+```{r helix, webgl=TRUE}
+n <- 1000
+
+t <- runif(n, 0, 2 * pi)
+t_helix <-t
+
+x <- (2 + cos(8 * t)) * cos(t)
+y <- (2 + cos(8 * t)) * sin(t)
+z <- sin(8 * t)
+
+helix <- cbind(x, y ,z)
+# plot3d(helix[order(t), ], col = rainbow(n), size = 10)
+
+```
+
+## Twinpeaks
+
+$[1-2p_{i},\sin(\pi-2\pi p_{i}),\tanh(3-6q_{i})]$
+
+```{r echo = F}
+#### Twinpeaks ####
+# x <- 1 - 2 * p
+# y <- tanh(3 - 6 * q) 
+# z <- sin(pi - 2 * pi * p)
+# 
+# twinpeaks <- cbind(x, y, z)
+# plot3d(twinpeaks[order(t), ], col = rainbow(n), size = 10)
+```
+
+```{r twinpeaks, webgl=TRUE}
+#### Twinpeaks ####
+
+n <- 1000
+
+
+x <- runif(n, -1, 1)
+y <- runif(n, -1, 1)
+z <-  sin(pi * x) * tanh(3 * y)
+
+t_twinpeaks <-x
+
+twinpeaks <- cbind(x, y, z)
+# plot3d(twinpeaks[order(x),], col = rainbow(n), size = 10)
+```
+
+
+## Broken swiss
+
+```{r brokenswiss, webgl=TRUE}
+#### Broken swiss ####
+n <- 1000
+
+t <- c(
+        runif(floor(n / 2),   1.5 * pi, 2.7 * pi),
+        runif(ceiling(n / 2), 3.3 * pi, 4.5 * pi)
+      )
+y <- runif(n, 0, 30)
+
+x <- t * cos(t)
+y <- y
+z <- t * sin(t)
+
+t_brokenswiss <- t
+
+broken_swiss <- cbind(x,y,z)
+# plot3d(broken_swiss[order(t), ], col = rainbow(n), size = 10)
+```
+
+Snapshot pour chaque données
+```{r allplot, webgl=TRUE}
+n <- 1000
+
+mfrow3d(nr = 2,nc = 2,sharedMouse = TRUE)
+plot3d(swissroll[order(t_swissroll), ], col = rainbow(n), size = 10)
+decorate3d(sub = "1. Swiss roll dataset")
+
+plot3d(helix[order(t_helix), ], col = rainbow(n), size = 10)
+decorate3d(sub = "2. Helix dataset")
+
+plot3d(twinpeaks[order(t_twinpeaks),], col = rainbow(n), size = 10)
+decorate3d(sub = "3. Twinpeaks dataset")
+
+plot3d(broken_swiss[order(t_brokenswiss), ], col = rainbow(n), size = 10)
+decorate3d(sub = "4. Broken swiss dataset")
+
+# par3d(windowRect = c(20, 30, 800, 800))
+
+# snapshot3d("simuldata.png")
+```
+
+# 2. Estimation
+
+Vous choisirez deux ou trois techniques de réduction de la dimension d’un jeu de données.
+Votre choix des données et méthodes doit être pertinent. Cette partie contient deux composantes:
+
+D’une part la calibration des méthodes (réglage des paramètres tel comme la dimension intrinsèque). 
+
+D’autre part, l’application des méthodes correctement calibrées sur les données simulées pour obtenir une configuration de points qui puisse être représentée dans un espace euclidien.
+
+3 techniques de réduction de la dimension d'un jeu de données au choix:
+- PCA
+- isomap
+- MDS
+- tSNE
+- Kernel PCA (KPCA)
+- LLE
+
+
+## MDS
+```{r}
+library(ggplot2)
+PlotSwissRoll <- function(CoordPoints, Col = NULL) {
+  if (is.null(Col)) {
+    Col = 1:nrow(swissroll)
+  }
+  ggplot(data = data.frame( X = CoordPoints[,1], Y = CoordPoints[,2], Col = Col),
+         aes(x = X, y = Y)) + 
+    geom_point(aes(colour = Col), size = 5) + guides(color = FALSE)
+}
+
+DistSwissRoll <- dist(swissroll)
+SwissRollMDS <- cmdscale(DistSwissRoll, k = 2)
+PlotSwissRoll(SwissRollMDS)
+plot(SwissRollMDS)
+```
+
