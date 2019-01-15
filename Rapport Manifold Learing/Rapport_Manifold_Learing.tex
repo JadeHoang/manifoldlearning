@@ -316,7 +316,7 @@
 \usepackage[unicode=true]{hyperref}
 
 \hypersetup{
-            pdftitle={Bare Demo of IEEEtran.cls for IEEE Conferences},
+            pdftitle={Rapport de projet Manifold Learning},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -344,7 +344,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Bare Demo of IEEEtran.cls for IEEE Conferences}
+\title{Rapport de projet Manifold Learning}
 
 % author names and affiliations
 % use a multiple column layout for up to three different
@@ -362,47 +362,20 @@
  %% -- beg if/affiliation.institution-columnar
 \IEEEauthorblockN{
   %% -- beg for/affiliation.institution.author
-Michael Shell %% -- end for/affiliation.institution.author
+HOANG Bich Ngoc,
+  %% -- beg for/affiliation.institution.author
+LA Zangda,
+  %% -- beg for/affiliation.institution.author
+LEE Chihoon %% -- end for/affiliation.institution.author
 }
-\IEEEauthorblockA{Georgia Institute of Technology\\
-School of Electrical and Computer Engineering\\
-Atlanta, Georgia 30332--0250
-\\ece@datech.edu
-}
-\and
-\IEEEauthorblockN{
+\IEEEauthorblockA{Université Lumière Lyon 2\\
+M2 Data Mining
   %% -- beg for/affiliation.institution.author
-Homer Simpson %% -- end for/affiliation.institution.author
-}
-\IEEEauthorblockA{Twentieth Century Fox\\
-Springfield, USA
+\\Bich-Ngoc.Hoang@univ-lyon2.fr
   %% -- beg for/affiliation.institution.author
-\\homer@thesimpsons.com
- %% -- end for/affiliation.institution.author
-}
-\and
-\IEEEauthorblockN{
+\\Zangda.La@univ-lyon2.fr
   %% -- beg for/affiliation.institution.author
-Montgomery Scott %% -- end for/affiliation.institution.author
-}
-\IEEEauthorblockA{Starfleet Academy\\
-San Francisco, California 96678-2391
-  %% -- beg for/affiliation.institution.author
- %% -- end for/affiliation.institution.author
-}
-\and
-\IEEEauthorblockN{
-  %% -- beg for/affiliation.institution.author
-Eldon Tyrell,
-  %% -- beg for/affiliation.institution.author
-Roy Batty %% -- end for/affiliation.institution.author
-}
-\IEEEauthorblockA{Tyrell Inc.\\
-123 Replicant Street, Los Angeles, USA 90210--4321
-  %% -- beg for/affiliation.institution.author
-\\eldon@starfleet-academy.star
-  %% -- beg for/affiliation.institution.author
-\\roy@replicant.offworld
+\\Chihoon.Lee@univ-lyon2.fr
  %% -- end for/affiliation.institution.author
 }
  %% -- end for/affiliation.institution
@@ -456,7 +429,7 @@ Roy Batty %% -- end for/affiliation.institution.author
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-The abstract goes here. On multiple lines eventually.
+Présenter le sujet
 \end{abstract}
 
 % no keywords
@@ -483,31 +456,47 @@ The abstract goes here. On multiple lines eventually.
 
 \section{Introduction}\label{introduction}
 
-This demo file is intended to serve as a ``starter file'' for IEEE
-conference papers produced under \LaTeX~using IEEEtran.cls version 1.8b
-and later. I wish you the best of success.
+Présenter les choix des données, des méthodes et les critères de
+comparaison entre les méthodes.
 
-\subsection{Subsection Heading Here}\label{subsection-heading-here}
+\subsection{Objectifs (et détail de vos
+choix)}\label{objectifs-et-detail-de-vos-choix}
 
 Subsection text here.
 
-\subsubsection{Subsubsection Heading
-Here}\label{subsubsection-heading-here}
+\subsection{Matériels et méthodes (description des techniques que vous
+utiliserez)}\label{materiels-et-methodes-description-des-techniques-que-vous-utiliserez}
 
 Subsubsection text here.
+
+\section{Données}\label{donnees}
+
+(justification du choix des données et leur description)
+
+\subsection{Expériences numériques sur les données artificiels (détail
+de votre étude afin de rendre votre
+travail}\label{experiences-numeriques-sur-les-donnees-artificiels-detail-de-votre-etude-afin-de-rendre-votre-travail}
+
+\section{Comparaison des méthodes}\label{comparaison-des-methodes}
+
+\subsection{Les méthodes choisis}\label{les-methodes-choisis}
+
+Présenter brièvement des méthodes qu'on a choisi
+
+\subsection{Comparaison}\label{comparaison}
+
+Comparaison selon les erreurs d'apprentissage
+
+\section{Application sur données
+réelles.}\label{application-sur-donnees-reelles.}
 
 \section{Conclusion}\label{conclusion}
 
 The conclusion goes here.
 
-\section{Acknowledgment}\label{acknowledgment}
-
-The authors would like to thank\ldots{}
-
 \section{Bibliography styles}\label{bibliography-styles}
 
-Here are two sample references: Feynman and Vernon Jr. (1963; Dirac
-1953).
+Here are two sample references: Laurens van der Maaten (2009).
 
 \newpage
 
@@ -515,16 +504,10 @@ Here are two sample references: Feynman and Vernon Jr. (1963; Dirac
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Dirac1953888}{}
-Dirac, P.A.M. 1953. ``The Lorentz Transformation and Absolute Time.''
-\emph{Physica} 19 (1--12): 888--96.
-doi:\href{https://doi.org/10.1016/S0031-8914(53)80099-6}{10.1016/S0031-8914(53)80099-6}.
-
-\hypertarget{ref-Feynman1963118}{}
-Feynman, R.P, and F.L Vernon Jr. 1963. ``The Theory of a General Quantum
-System Interacting with a Linear Dissipative System.'' \emph{Annals of
-Physics} 24: 118--73.
-doi:\href{https://doi.org/10.1016/0003-4916(63)90068-X}{10.1016/0003-4916(63)90068-X}.
+\hypertarget{ref-JaapHerik}{}
+Laurens van der Maaten, Jaap van den Herik, Eric Postma. 2009.
+``Dimensionality Reduction: A Comparative Review,'' October. Tilburg
+University.
 
 \end{document}
 
