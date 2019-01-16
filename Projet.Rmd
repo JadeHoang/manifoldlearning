@@ -6,23 +6,22 @@ output: html_document
 ---
 ```{r}
 rm(list =ls())
-
 ```
 
 # 1. Simulation
-
-2 random numbers: $p_{i}$ et $q_{i}$ sampled from uniform distribution with support [0,1]
-
-## Swissroll
-- $x_{i}$: data point
-- $x_{i} = [t_{i}\cos(t_{i}),t_{i}\sin(t_{i}),30q_{i}]$ where $t_{i}=\frac{3\pi}{2}(1+2p_{i})$
 
 ```{r}
 # install.packages("rgl")
 library(rgl)
 library(knitr)
 knit_hooks$set(webgl = hook_webgl)
+set.seed(123456)
 ```
+
+## Swissroll
+- $x_{i}$: data point
+- $x_{i} = [t_{i}\cos(t_{i}),t_{i}\sin(t_{i}),20q_{i}]$ where $t_{i}=\frac{3\pi}{2}(1+2p_{i})$
+2 random numbers: $p_{i}$ et $q_{i}$ sampled from uniform distribution with support [0,1]
 
 ```{r swissroll, webgl=TRUE}
 #### Swiss roll ####
@@ -34,62 +33,35 @@ q <- u[,2]
 
 t <- 3 * pi / 2 * (1 + 2 * p)
 t_swissroll <- t
-# x <- t * cos(t)
-# y <- 30 * q
-# z <- t * sin(t)
 
-#Jairo's codes
 x <- -cos(t) * t
 y <- 20 * q
 z <- sin(t) * t
 
 swissroll <- cbind(x, y , z)
-# plot3d(swissroll[order(t), ], col = rainbow(n), size = 10)
 ```
-
 
 ## Helix
+
 $x_{i}=[(2+\cos(8p_{i}))\cos(p_{i}),(2+\cos(8p_{i}))\sin(p_{i}),\sin(8p_{i})]$
-
-```{r echo = F }
-# #### Helix ####
-# x <- (2 + cos(8 * p)) * cos(p)
-# y <- sin(8 * p)
-# z <- (2 + cos(8 * p)) * sin(p)
-# 
-# helix <- cbind(x, y, z)
-# plot3d(helix[order(t), ], col = rainbow(n), size = 10)
-
-```
 
 ```{r helix, webgl=TRUE}
 n <- 1000
 
 t <- runif(n, 0, 2 * pi)
-t_helix <-t
+
 
 x <- (2 + cos(8 * t)) * cos(t)
 y <- (2 + cos(8 * t)) * sin(t)
 z <- sin(8 * t)
 
+t_helix <- t
+
 helix <- cbind(x, y ,z)
-# plot3d(helix[order(t), ], col = rainbow(n), size = 10)
 
 ```
 
 ## Twinpeaks
-
-$[1-2p_{i},\sin(\pi-2\pi p_{i}),\tanh(3-6q_{i})]$
-
-```{r echo = F}
-#### Twinpeaks ####
-# x <- 1 - 2 * p
-# y <- tanh(3 - 6 * q) 
-# z <- sin(pi - 2 * pi * p)
-# 
-# twinpeaks <- cbind(x, y, z)
-# plot3d(twinpeaks[order(t), ], col = rainbow(n), size = 10)
-```
 
 ```{r twinpeaks, webgl=TRUE}
 #### Twinpeaks ####
@@ -101,12 +73,11 @@ x <- runif(n, -1, 1)
 y <- runif(n, -1, 1)
 z <-  sin(pi * x) * tanh(3 * y)
 
-t_twinpeaks <-x
+t_twinpeaks <- z
 
 twinpeaks <- cbind(x, y, z)
-# plot3d(twinpeaks[order(x),], col = rainbow(n), size = 10)
-```
 
+```
 
 ## Broken swiss
 
@@ -118,38 +89,44 @@ t <- c(
         runif(floor(n / 2),   1.5 * pi, 2.7 * pi),
         runif(ceiling(n / 2), 3.3 * pi, 4.5 * pi)
       )
+
 y <- runif(n, 0, 30)
 
-x <- t * cos(t)
+x <- -cos(t) * t
 y <- y
-z <- t * sin(t)
+z <- sin(t) * t
 
 t_brokenswiss <- t
 
 broken_swiss <- cbind(x,y,z)
-# plot3d(broken_swiss[order(t), ], col = rainbow(n), size = 10)
 ```
 
 Snapshot pour chaque données
 ```{r allplot, webgl=TRUE}
 n <- 1000
 
+#class, in order
+cls <- rep(2:1, each = 1000/4, times = 2)
+
 mfrow3d(nr = 2,nc = 2,sharedMouse = TRUE)
-plot3d(swissroll[order(t_swissroll), ], col = rainbow(n), size = 10)
+plot3d(swissroll[order(t_swissroll), ], col = cls, size = 10)
 decorate3d(sub = "1. Swiss roll dataset")
 
-plot3d(helix[order(t_helix), ], col = rainbow(n), size = 10)
+plot3d(helix[order(t_helix), ], col = cls, size = 10)
 decorate3d(sub = "2. Helix dataset")
 
-plot3d(twinpeaks[order(t_twinpeaks),], col = rainbow(n), size = 10)
+plot3d(twinpeaks[order(t_twinpeaks),], col = cls, size = 10)
 decorate3d(sub = "3. Twinpeaks dataset")
 
-plot3d(broken_swiss[order(t_brokenswiss), ], col = rainbow(n), size = 10)
+plot3d(broken_swiss[order(t_brokenswiss), ], col = cls, size = 10)
 decorate3d(sub = "4. Broken swiss dataset")
 
+# Fixer une taille plus grande piur la fenêtre
 # par3d(windowRect = c(20, 30, 800, 800))
 
-# snapshot3d("simuldata.png")
+# Capture d'écran les graphiques 3D des 4 datasets
+# snapshot3d("Rapport Manifold Learing/img/simuldata.png")
+
 ```
 
 # 2. Estimation
@@ -161,39 +138,16 @@ D’une part la calibration des méthodes (réglage des paramètres tel comme la
 
 D’autre part, l’application des méthodes correctement calibrées sur les données simulées pour obtenir une configuration de points qui puisse être représentée dans un espace euclidien.
 
-3 techniques de réduction de la dimension d'un jeu de données au choix:
-- PCA
-- isomap
-- MDS
-- tSNE
-- Kernel PCA (KPCA)
-- LLE
+3 techniques de réduction de la dimension d'un jeu de données au choix:  
+  - isomap  
+  - tSNE  
+  - LLE
 
-
-## MDS
-```{r}
-library(ggplot2)
-PlotSwissRoll <- function(CoordPoints, Col = NULL) {
-  if (is.null(Col)) {
-    Col = 1:nrow(swissroll)
-  }
-  ggplot(data = data.frame( X = CoordPoints[,1], Y = CoordPoints[,2], Col = Col),
-         aes(x = X, y = Y)) + 
-    geom_point(aes(colour = Col), size = 5) + guides(color = FALSE)
-}
-
-DistSwissRoll <- dist(swissroll)
-SwissRollMDS <- cmdscale(DistSwissRoll, k = 2)
-PlotSwissRoll(SwissRollMDS)
-plot(SwissRollMDS)
-```
-
-
-Estimation 
+## Estimation avec Corrélation Dimension
 
 Kernel-based Correlation Dimension
 ```{r}
-#install.packages("ider")
+# install.packages("ider")
 library(ider)
 print(d_swissroll <- convU(swissroll))
 print(d_broken_swiss <- convU(broken_swiss))
@@ -201,3 +155,164 @@ print(d_helix <- convU(helix))
 print(d_twinpeaks <- convU(twinpeaks))
 
 ```
+
+Fonction de récupération l'erreur KNN
+```{r}
+getKnnError <- function(data_manifold, k = 1){
+  
+  #data_manifold : un dataframe,
+  #les dimensions intrinsèque obtenus via les méthodes manifold
+  #k : voisin
+  
+  nr <- nrow(data_manifold)
+  nc <- ncol(data_manifold)
+  require(class)
+  
+  #train : mélange les données
+  cl <- data_manifold$cls
+  fitknn <- knn.cv(data_manifold[, -nc], cl, k = k)
+  mat.confusion <- table(fitknn, cl)
+  return(1 - sum(diag(mat.confusion)) / nr)
+}
+```
+
+Créer les dataframes des données avec leurs classes
+```{r}
+#swiss roll
+swissroll.df <- data.frame(swissroll[order(t_swissroll), ], cls = cls)
+names(swissroll.df)
+
+#helix
+helix.df <- data.frame(helix[order(t_helix), ], cls = cls)
+names(helix.df)
+
+#twinpeaks
+twinpeaks.df <- data.frame(twinpeaks[order(t_twinpeaks), ], cls = cls)
+names(twinpeaks.df)
+
+#broken swiss
+broken_swiss.df <- data.frame(broken_swiss[order(t_brokenswiss), ], cls = cls)
+names(broken_swiss.df)
+
+rm(swissroll,helix,twinpeaks,broken_swiss)
+```
+
+## PCA
+```{r pca}
+#fonction pour créer les graphiques selon les datasets
+plot_PCA <- function(dataset, plot = TRUE, geterrorKNN = TRUE, k = 1){
+  res.pca <- prcomp(dataset[, -4], scale = TRUE)
+  res.data.df <- data.frame(res.pca$x[, 1:2], cls = cls)
+  if (plot) plot(res.pca$x[, 1:2], col = cls, main = sub("*.df", "",  deparse(substitute(dataset))),xlab = "X",ylab = "Y")
+  if (geterrorKNN) return (getKnnError(res.data.df, k))
+}
+
+par(mfrow = c(2,2))
+plot_PCA(swissroll.df)
+plot_PCA(helix.df)
+plot_PCA(twinpeaks.df)
+plot_PCA(broken_swiss.df)
+
+```
+
+## ISOMAP
+
+```{r isomap}
+library(vegan)
+
+#fonction pour plot et erreur de KNN
+plot_isomap <- function(dataset,ndim,k, plot = TRUE, geterrorKNN = TRUE, kNN = 1){
+  d <- dist(dataset[, -4])
+  fit <- isomap(d, ndim=ndim, k = k)
+  res.data <- fit$points[, 1:ndim]
+  res.data.df <- data.frame(res.data, cls = cls)
+  if (plot) plot(res.data, col = cls, main=sub("*.df", "",  deparse(substitute(dataset))),xlab = "X",ylab = "Y")
+  if (geterrorKNN) return(getKnnError(res.data.df, k = kNN))
+}
+
+par(mfrow = c(2,2))
+plot_isomap(swissroll.df,ndim = 2,k = 12)
+plot_isomap(helix.df,ndim = 1, k = 12)
+plot_isomap(twinpeaks.df,ndim = 2, k = 12)
+plot_isomap(broken_swiss.df,ndim = 2, k = 12)
+```
+
+## LLE
+```{r}
+library(lle)
+
+plot_lle <- function(dataset, ndim, k ,plot = TRUE, geterrorKNN = TRUE, kNN = 1){
+  fit <- lle(dataset[, -4],m = ndim, k = k, ss=FALSE, id=TRUE, v=0.9 )
+  res.data.df <- data.frame(fit$Y, cls = cls)
+  if (plot) plot(fit$Y, xlab = "X", ylab = "Y",col = cls, main=sub("*.df", "",  deparse(substitute(dataset))))
+  if (geterrorKNN) return (getKnnError(res.data.df, k = kNN))
+}
+
+par(mfrow = c(2,2))
+plot_lle(swissroll.df, ndim = 2, k=15)
+plot_lle(helix.df, ndim = 1, k = 15)
+plot_lle(twinpeaks.df,ndim = 2, k = 15)
+plot_lle(broken_swiss.df, ndim = 2, k = 15)
+```
+
+
+## T-SNE 
+```{r tsne}
+library(Rtsne)
+
+plot_tsne <- function(dataset,ndim, perplexity = 15, plot = TRUE, geterrorKNN = TRUE, kNN = 1){
+  fit <- Rtsne(dataset[, -4], dims = ndim , perplexity = perplexity , pca = FALSE)
+  res.data.df <- data.frame(fit$Y, cls = cls)
+  if (plot) plot(fit$Y, col = cls, xlab = "X", ylab = "Y", main=sub("*.df", "",  deparse(substitute(dataset))))
+  if (geterrorKNN) return(getKnnError(res.data.df, k = kNN))
+}
+
+par(mfrow = c(2,2))
+plot_tsne(swissroll.df, ndim = 2)
+plot_tsne(helix.df, ndim = 1)
+plot_tsne(twinpeaks.df, ndim = 2)
+plot_tsne(broken_swiss.df, ndim = 2)
+
+```
+
+# 3. Application sur MNIST
+
+```{r}
+all    <- as.matrix(read.table("minimnist/data.txt"))
+labels <- read.table("minimnist/labels.txt", colClasses = 'integer')
+
+showDigit <- function(line) {
+  p <- sqrt(length(line))
+  mat <- matrix(as.numeric(line), p)[, p:1] # inverse column order
+  image(mat, col = grey(256:1/256))
+}
+
+i <- 8; showDigit(all[i, ]); labels$V1[i]; rm(i)
+
+layout(matrix(1:16, ncol = 4))
+par(mai = c(0, 0, 0, 0))
+for (j in sample(nrow(all), 16)) showDigit(all[j, ])
+
+# Individu moyen 
+layout(1)
+showDigit(colMeans(all))
+
+
+all3 <- all[labels == 3, ]
+
+cte <- which(apply(all3, 2, sd) == 0)
+pca3 <- prcomp(scale(all3[, -cte]))
+plot(pca3$rotation[, 1:2])
+
+
+identify(pca3$rotation[, 1:2])
+
+ids <- c(249, 289, 359, 435)
+
+layout(matrix(1:4, 2))
+showDigit(all3[249, ])
+showDigit(all3[289, ])
+showDigit(all3[359, ])
+showDigit(all3[435, ])
+```
+
